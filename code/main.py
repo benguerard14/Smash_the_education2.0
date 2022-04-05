@@ -1,4 +1,5 @@
 from selenium import webdriver
+import exercises as ex
 from pynput.keyboard import Controller as KeyController
 import keyboard
 import mouse
@@ -19,14 +20,6 @@ def comic(driver):
         button.click()
         time.sleep(0.5)
 
-def forbidden_word_guess(driver):
-    main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "MasterHintContent")))
-    arr = driver.find_elements(By.CLASS_NAME, "textarea")
-    for i in range(len(arr)):
-        answer = driver.find_element(By.XPATH, f'//*[@id="Answer_{i + 1}"]/span').get_attribute("textContent")
-        arr[i].send_keys(answer)
-    button = driver.find_element(By.ID, 'ActivityContent_sendAnswers').click()
-
 def mixed_sentences(driver):
     main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "MasterHintContent")))
     w_arr = driver.find_elements(By.CLASS_NAME, 'draggmeEvent')
@@ -36,22 +29,6 @@ def mixed_sentences(driver):
             if int(box.get_attribute("elid")) == num:
                 num += 1
                 box.click()
-
-def voice_test(driver):
-    try:
-        main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "Sequence_1")))
-        exercises = driver.find_elements(By.CLASS_NAME, 'activity-o-card-answerbase')
-        button_1 = driver.find_element(By.ID, "Sequence_1").click()
-        for i in range(len(exercises)):
-            for i in range(3):
-                time.sleep(2)
-                voice_button = driver.find_element(By.XPATH, '//*[@id="r01"]/div[2]').click()
-                time.sleep(2)
-                voice_button = driver.find_element(By.XPATH, '//*[@id="r01"]').click()
-                time.sleep(2)
-    except Exception as e:
-        print(e)
-        driver.quit()
 
 def L_Homme_Noye(driver):
     letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
@@ -90,18 +67,6 @@ def multiple_choice(driver):
             question.click()
     button = driver.find_element(By.XPATH, '//*[@id="ConteinerToHide2"]/div/button[2]').click()
 
-def word_guess(driver):
-    try:
-        main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "C_Ans")))
-        answer = driver.find_element(By.ID, "C_Ans").get_attribute("textContent").split("\n")[1]
-        text_box = driver.find_element(By.ID, "Textarea")
-        text_box.clear()
-        text_box.send_keys(answer)
-        verify = driver.find_element(By.ID, "verified").click()
-        time.sleep(5)
-    except:
-        driver.quit()
-
 def image_choose(driver):
     try:
         main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="draggables"]/div[1]')))
@@ -116,15 +81,15 @@ def image_choose(driver):
         print(e)
         driver.quit()
 
-def phrase_complete(driver):
-    main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'op1')))
-    buttons = driver.find_elements(By.CLASS_NAME, "draggmeEvent")
-    for i in range(len(buttons) + 1):
-        button = driver.find_element(By.ID, f"op{i + 1}").click()
-
 def main():
     link = input("What is the link? ")
     options = Options()
+    options.add_experimental_option("prefs", { \
+    "profile.default_content_setting_values.media_stream_mic": 1, 
+    "profile.default_content_setting_values.media_stream_camera": 1,
+    "profile.default_content_setting_values.geolocation": 1, 
+    "profile.default_content_setting_values.notifications": 1 
+  })
     driver_path = './chrome/chromedriver'
     driver = webdriver.Chrome(options = options, executable_path = driver_path, service=Service(ChromeDriverManager().install()))
     driver.get(link)
@@ -132,9 +97,7 @@ def main():
     f_email = driver.find_element(By.ID, "smTxtEmail").send_keys("guerard@jm302.com")
     f_password = driver.find_element(By.ID, "smTxtPassword").send_keys("smash")
     log_in = driver.find_element(By.ID, "smBtnLogin").click()
-
-    word_guess(driver)
-    driver.quit()
-
+    ex.phrase_complete(driver)
+    time.sleep(1000000) 
 if __name__ == '__main__':
     main()
