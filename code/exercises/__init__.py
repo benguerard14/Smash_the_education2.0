@@ -2,3 +2,8 @@ from .word_guess import word_guess
 from .voice_test import voice_test
 from .forbidden_word_guess import forbidden_word_guess 
 from .phrase_complete import phrase_complete 
+from .L_homme_noye import L_homme_noye
+from .image_choose import image_choose
+from .multiple_choice import multiple_choice
+from .mixed_sentences import mixed_sentences
+from .comic import comic
